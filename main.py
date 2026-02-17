@@ -1,4 +1,4 @@
-import map.py
+import map
 
 class Room:
     def __init__(self, name):
@@ -16,11 +16,11 @@ def game_loop():
     print("🧟--- Welcome to Zombie KidZ - Save the school!!🧟")
     # Initilise Game State
     rooms = {
-        "Office" : Room("Office")
-        "Gym" : Room("Gym")
-        "Classroom" : Room("Classroom")
-        "Storeroom" : Room("Storeroom")
-        "Library" : Room("Library")
+        "Office": Room("Office"),
+        "Gym": Room("Gym"),
+        "Classroom": Room("Classroom"),
+        "Storeroom": Room("Storeroom"),
+        "Library": Room("Library"),
     }
     player = Player("Hero", "Blue")
 
