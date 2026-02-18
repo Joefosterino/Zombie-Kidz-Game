@@ -42,15 +42,22 @@ def game_loop():
             game_running = False
         elif action == 'm':
             new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library): ")
+            
             if new_room in game_board[player.position].neighbors:
-                player.position = new_room
-                if (game_board[player.position].zombies < 3) and (game_board[player.position].zombies > 0):
-                    print(f"\n{game_board[player.position].zombies} zombies cleared from the {player.position}")
-                    game_board[player.position].clear_room()
+                target_room = game_board[new_room]  # Grab the actual Room object first
+                
+                if target_room.zombies < 3:
+                    # Move the player
+                    player.position = new_room 
+                    
+                    # Clear zombies using the target_room object directly
+                    if target_room.zombies > 0:
+                        print(f"\n✨ {target_room.zombies} zombies cleared from the {new_room}!")
+                        target_room.clear_room()
                 else:
-                    print(f"More than 3 zombies in the {player.position}, unable to clear it!")
+                    print(f"🚫 {new_room} is overrun (3+ zombies)! You can't enter.")
             else:
-                print("Unable to move to this room! Please try again:")
+                print("❌ Those rooms aren't connected!")
         
 if __name__ == "__main__":
     game_loop()
