@@ -17,24 +17,25 @@ zombie_die_map = ["Office", "Gym", "Classroom", "Storeroom", "Library", "None"]
 def game_loop():
     print("🧟--- Welcome to Zombie KidZ - Save the school!!🧟")
     # Initilise Game State
-    print("....Dice Rolling....")
+    
     game_board = build_board()
     zbank = ZombieBank(8)
-
-    dice_roll = randint(0,5)
-    room_name = zombie_die_map[dice_roll]
-
-    if room_name == "None":
-        print("No Zombie entered the building")
-    else:
-        game_board[room_name].add_zombie()
-        zbank.remove_zombie_from_bank()
-        print(f"Zombie entered the {room_name}.  Zombie Bank: {zbank.qty}")
 
     player = Player("Hero", "Blue")
 
     game_running = True
     while game_running:
+        print("....Dice Rolling....")
+        dice_roll = randint(0,5)
+        room_name = zombie_die_map[dice_roll]
+
+        if room_name == "None":
+            print("No Zombie entered the building")
+        else:
+            game_board[room_name].add_zombie()
+            zbank.remove_zombie_from_bank()
+            print(f"Zombie entered the {room_name}.  Zombie Bank: {zbank.qty}")
+        
         print(f"\n{player.name} is in the {player.position}")
         action = input("Choose action: (m)ove, (q)uit: ").lower()
 
