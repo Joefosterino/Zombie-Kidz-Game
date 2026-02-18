@@ -13,13 +13,23 @@ class Zombie_Bank:
     def __init__(self, no_zombies):
         pass
 
+# Create a list where the index matches the dice roll
+# 0=White (Office), 1=Red (Gym), etc.
+zombie_die_map = ["Office", "Gym", "Classroom", "Storeroom", "Library", "None"]
+
 def game_loop():
     print("🧟--- Welcome to Zombie KidZ - Save the school!!🧟")
     # Initilise Game State
     print("....Dice Rolling....")
-    dice_roll = randint(0,5)
-
     game_board = build_board()
+    dice_roll = randint(0,5)
+    room_name = zombie_die_map[dice_roll]
+
+    if room_name == "None":
+        print("No Zombie entered the building")
+    else:
+        game_board[room_name].add_zombie()
+        print(f"Zombie entered the {room_name}")
 
     player = Player("Hero", "Blue")
 
@@ -32,7 +42,7 @@ def game_loop():
             game_running = False
         elif action == 'm':
             new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library)")
-            if new_room in game_board[player.position]:
+            if new_room in game_board[player.position].neighbors:
                 player.position = new_room
             else:
                 print("Invalid room!")
