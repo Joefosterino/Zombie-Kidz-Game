@@ -1,6 +1,7 @@
 import map
 from random import randint
 from map import build_board
+from Classes import ZombieBank
 
 
 class Player:
@@ -8,10 +9,6 @@ class Player:
         self.name = name
         self.colour = colour
         self.position = "Office"
-
-class Zombie_Bank:
-    def __init__(self, no_zombies):
-        pass
 
 # Create a list where the index matches the dice roll
 # 0=White (Office), 1=Red (Gym), etc.
@@ -22,6 +19,8 @@ def game_loop():
     # Initilise Game State
     print("....Dice Rolling....")
     game_board = build_board()
+    zbank = ZombieBank(8)
+
     dice_roll = randint(0,5)
     room_name = zombie_die_map[dice_roll]
 
@@ -29,7 +28,8 @@ def game_loop():
         print("No Zombie entered the building")
     else:
         game_board[room_name].add_zombie()
-        print(f"Zombie entered the {room_name}")
+        zbank.remove_zombie_from_bank()
+        print(f"Zombie entered the {room_name}.  Zombie Bank: {zbank.qty}")
 
     player = Player("Hero", "Blue")
 
@@ -52,8 +52,10 @@ def game_loop():
                     
                     # Clear zombies using the target_room object directly
                     if target_room.zombies > 0:
-                        print(f"\n✨ {target_room.zombies} zombies cleared from the {new_room}!")
+                        zbank.add_zombie_to_bank(target_room.zombies)
+                        print(f"\n✨ {target_room.zombies} zombies cleared from the {new_room}!  Zombie Bank: {zbank.qty}")
                         target_room.clear_room()
+                        
                 else:
                     print(f"🚫 {new_room} is overrun (3+ zombies)! You can't enter.")
             else:
