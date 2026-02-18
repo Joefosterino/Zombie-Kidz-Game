@@ -36,16 +36,21 @@ def game_loop():
     game_running = True
     while game_running:
         print(f"\n{player.name} is in the {player.position}")
-        action = input("Choose action: (m)ove, (q)uit").lower()
+        action = input("Choose action: (m)ove, (q)uit: ").lower()
 
         if action == 'q':
             game_running = False
         elif action == 'm':
-            new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library)")
+            new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library): ")
             if new_room in game_board[player.position].neighbors:
                 player.position = new_room
+                if (game_board[player.position].zombies < 3) and (game_board[player.position].zombies > 0):
+                    print(f"\n{game_board[player.position].zombies} zombies cleared from the {player.position}")
+                    game_board[player.position].clear_room()
+                else:
+                    print(f"More than 3 zombies in the {player.position}, unable to clear it!")
             else:
-                print("Invalid room!")
+                print("Unable to move to this room! Please try again:")
         
 if __name__ == "__main__":
     game_loop()
