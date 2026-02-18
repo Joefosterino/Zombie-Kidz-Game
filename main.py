@@ -1,10 +1,7 @@
 import map
+from random import randint
+from map import build_board
 
-class Room:
-    def __init__(self, name):
-        self.name = name
-        self.zombies = 0
-        self.is_locked = False
 
 class Player:
     def __init__(self, name, colour):
@@ -12,16 +9,18 @@ class Player:
         self.colour = colour
         self.position = "Office"
 
+class Zombie_Bank:
+    def __init__(self, no_zombies):
+        pass
+
 def game_loop():
     print("🧟--- Welcome to Zombie KidZ - Save the school!!🧟")
     # Initilise Game State
-    rooms = {
-        "Office": Room("Office"),
-        "Gym": Room("Gym"),
-        "Classroom": Room("Classroom"),
-        "Storeroom": Room("Storeroom"),
-        "Library": Room("Library"),
-    }
+    print("....Dice Rolling....")
+    dice_roll = randint(0,5)
+
+    game_board = build_board()
+
     player = Player("Hero", "Blue")
 
     game_running = True
@@ -33,10 +32,10 @@ def game_loop():
             game_running = False
         elif action == 'm':
             new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library)")
-            if new_room in rooms:
+            if new_room in game_board[player.position]:
                 player.position = new_room
             else:
-                print("invalid room!")
+                print("Invalid room!")
         
 if __name__ == "__main__":
     game_loop()
