@@ -1,8 +1,9 @@
 class Room:
-    def __init__(self, name, neighbors):
+    def __init__(self, name, neighbors, is_entry = False):
         self.name = name
         self.neighbors = neighbors
         self.zombies = 0
+        self.is_entry = is_entry
         self.is_locked = False
 
     def add_zombie(self):
