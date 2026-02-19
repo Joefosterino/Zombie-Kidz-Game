@@ -21,10 +21,13 @@ def game_loop():
     game_board = build_board()
     zbank = ZombieBank(8)
 
-    player = Player("Hero", "Blue")
+    players = [Player("Hero 1", "Blue"),Player("Hero 2", "Red")]
+    turn_counter = 0
 
     game_running = True
     while game_running:
+        current_player = players[turn_counter % 2]
+        print(f"It is {current_player.name}'s turn")
         print("....Dice Rolling....")
         dice_roll = randint(0,5)
         room_name = zombie_die_map[dice_roll]
@@ -36,7 +39,7 @@ def game_loop():
             zbank.remove_zombie_from_bank()
             print(f"Zombie entered the {room_name}.  Zombie Bank: {zbank.qty}")
         
-        print(f"\n{player.name} is in the {player.position}")
+        print(f"\n{current_player.name} is in the {current_player.position}")
         action = input("Choose action: (m)ove, (q)uit: ").lower()
 
         if action == 'q':
@@ -44,12 +47,12 @@ def game_loop():
         elif action == 'm':
             new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library): ")
             
-            if new_room in game_board[player.position].neighbors:
+            if new_room in game_board[current_player.position].neighbors:
                 target_room = game_board[new_room]  # Grab the actual Room object first
                 
                 if target_room.zombies < 3:
                     # Move the player
-                    player.position = new_room 
+                    current_player.position = new_room 
                     
                     # Clear zombies using the target_room object directly
                     if target_room.zombies > 0:
@@ -61,6 +64,7 @@ def game_loop():
                     print(f"🚫 {new_room} is overrun (3+ zombies)! You can't enter.")
             else:
                 print("❌ Those rooms aren't connected!")
+        turn_counter += 1
         
 if __name__ == "__main__":
     game_loop()
