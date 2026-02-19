@@ -45,25 +45,48 @@ def game_loop():
         if action == 'q':
             game_running = False
         elif action == 'm':
-            new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library): ")
+            new_room = input("Which room? (Office, Gym, Classroom, Storeroom, Library, Entryway 1-4 or type current room to stay): ")
             
-            if new_room in game_board[current_player.position].neighbors:
-                target_room = game_board[new_room]  # Grab the actual Room object first
+            # --- UPDATE: Check if neighbor OR staying put ---
+            is_neighbor = new_room in game_board[current_player.position].neighbors
+            is_staying = new_room == current_player.position
+
+            if is_neighbor or is_staying:
+                target_room = game_board[new_room]
                 
                 if target_room.zombies < 3:
-                    # Move the player
+                    # Move (or stay)
                     current_player.position = new_room 
                     
-                    # Clear zombies using the target_room object directly
+                    # Clear zombies
                     if target_room.zombies > 0:
                         zbank.add_zombie_to_bank(target_room.zombies)
-                        print(f"\n✨ {target_room.zombies} zombies cleared from the {new_room}!  Zombie Bank: {zbank.qty}")
+                        print(f"\n✨ {target_room.zombies} zombies cleared from the {new_room}! Zombie Bank: {zbank.qty}")
                         target_room.clear_room()
-                        
+                    
+                    # --- WIN CONDITION CHECK (Moved here) ---
+                    # Check if both players are now in the same room after the move
+                    pos1 = players[0].position
+                    pos2 = players[1].position
+
+                    if pos1 == pos2:
+                        room = game_board[pos1]
+                        if room.is_entry and not room.is_locked:
+                            room.is_locked = True
+                            print(f"🔒 HIGH FIVE! {pos1} has been LOCKED!")
+                            
                 else:
-                    print(f"🚫 {new_room} is overrun (3+ zombies)! You can't enter.")
+                    print(f"🚫 {new_room} is overrun (3+ zombies)! You can't enter/stay.")
             else:
-                print("❌ Those rooms aren't connected!")
+                print("❌ Those rooms aren't connected, and you didn't choose to stay put!")
+
+        # Count how many rooms have is_locked == True
+        locked_count = sum(1 for r in game_board.values() if r.is_locked)
+        
+        if locked_count == 4:
+            print("🎉 CONGRATULATIONS! All gates are locked. The school is safe!")
+            game_running = False
+        
         turn_counter += 1
         
 if __name__ == "__main__":
